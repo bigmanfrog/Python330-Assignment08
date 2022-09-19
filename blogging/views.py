@@ -4,6 +4,7 @@ from django.template import loader
 from blogging.models import Post
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 '''
@@ -34,7 +35,13 @@ def detail_view(request, post_id):
 '''
 class BloggingDetailView(DetailView):
     model = Post
+    #published = Post.objects.exclude(published_date__exact=None)
+    try:
+        queryset = Post.objects.exclude(published_date__exact=None)
+    except Post.DoesNotExist:
+        raise Http404
     template_name = 'blogging/detail.html'
+    #pk_url_kwarg = 'post_id'
 
 '''
 def stub_view(request, *args, **kwargs):
